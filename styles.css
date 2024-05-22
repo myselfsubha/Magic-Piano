@@ -8,6 +8,12 @@ body {
     font-family: 'Arial', sans-serif;
     overflow: hidden;
 }
+.highlight{
+    background-color: #ffd700; /* Yellow background */
+    color: #333; /* Dark text color */
+    border-color: #ffd700; /* Yellow border color */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Shadow effect */
+}
 
 .piano-container {
     text-align: center;

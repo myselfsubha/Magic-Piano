@@ -4,103 +4,64 @@ document.addEventListener("DOMContentLoaded", () => {
     const demoBtn = document.getElementById("demo-btn");
     const tumHiHoBtn = document.getElementById("tum-hi-ho-btn");
     const bubbleContainer = document.querySelector('.bubble-container');
-
+    const songButtons = document.querySelectorAll(".song-btn");
+    let playing = false;
+    let currentTimeouts = [];
     // Simplified demo sequence
     const demoSequence = [
-        { note: "C4", duration: 600 },
-        { note: "E4", duration: 600 },
-        { note: "G4", duration: 600 },
-        { note: "A4", duration: 600 },
-        { note: "G4", duration: 600 },
-        { note: "F4", duration: 1200 },
-        { note: "E4", duration: 600 },
-        { note: "D4", duration: 600 },
-        { note: "E4", duration: 600 },
-        { note: "F4", duration: 1200 },
-        { note: "E4", duration: 600 },
-        { note: "G4", duration: 600 },
-        { note: "A4", duration: 600 },
-        { note: "B4", duration: 600 },
-        { note: "A4", duration: 600 },
-        { note: "G4", duration: 600 },
-        { note: "F4", duration: 1200 },
-        { note: "C4", duration: 600 },
-        { note: "E4", duration: 600 },
-        { note: "G4", duration: 600 },
-        { note: "A4", duration: 600 },
-        { note: "G4", duration: 600 },
-        { note: "F4", duration: 1200 },
-        { note: "E4", duration: 600 },
-        { note: "D4", duration: 600 },
-        { note: "E4", duration: 600 },
-        { note: "F4", duration: 1200 },
-        { note: "E4", duration: 600 },
-        { note: "G4", duration: 600 },
-        { note: "A4", duration: 600 },
-        { note: "B4", duration: 600 },
-        { note: "A4", duration: 600 },
-        { note: "G4", duration: 600 },
-        { note: "F4", duration: 1200 }
+        { note: "C4", duration: 500 },
+        { note: "E4", duration: 500 },
+        { note: "G4", duration: 500 },
+        { note: "C5", duration: 500 },
+        { note: "B4", duration: 500 },
+        { note: "G4", duration: 500 },
+        { note: "E4", duration: 500 },
+        { note: "C4", duration: 500 },
+        { note: "D4", duration: 500 },
+        { note: "F4", duration: 500 },
+        { note: "A4", duration: 500 },
+        { note: "D5", duration: 500 },
+        { note: "C5", duration: 500 },
+        { note: "A4", duration: 500 },
+        { note: "F4", duration: 500 },
+        { note: "D4", duration: 500 }
     ];
 
     // Simplified "Tum Hi Ho" sequence
     const tumHiHoSequence = [
-        // { note: "E4", duration: 400 },
-        // { note: "G#4", duration: 400 },
-        // { note: "A4", duration: 400 },
-        // { note: "G#4", duration: 400 },
-        // { note: "F#4", duration: 800 },
-        // { note: "E4", duration: 400 },
-        // { note: "D4", duration: 400 },
-        // { note: "E4", duration: 400 },
-        // { note: "F#4", duration: 800 },
-        // { note: "E4", duration: 400 },
-        // { note: "G#4", duration: 400 },
-        // { note: "A4", duration: 400 },
-        // { note: "B4", duration: 400 },
-        // { note: "A4", duration: 400 },
-        // { note: "G#4", duration: 400 },
-        // { note: "F#4", duration: 800 },
-        // { note: "E4", duration: 400 },
-        // { note: "D4", duration: 400 },
-        // { note: "E4", duration: 400 },
-        // { note: "F#4", duration: 800 },
-        // { note: "E4", duration: 400 },
-        // { note: "G#4", duration: 400 },
-        // { note: "A4", duration: 400 },
-        // { note: "B4", duration: 400 },
-        // { note: "A4", duration: 400 },
-        // { note: "G#4", duration: 400 },
-        // { note: "F#4", duration: 800 }
-        { note: "F4", duration: 800 },
-        { note: "A4", duration: 800 },
-        { note: "C5", duration: 800 },
-        { note: "D5", duration: 800 },
-        { note: "E5", duration: 1600 },
-        { note: "D5", duration: 800 },
-        { note: "C5", duration: 800 },
-        { note: "A4", duration: 800 },
-        { note: "F4", duration: 1600 },
-        { note: "A4", duration: 800 },
-        { note: "C5", duration: 800 },
-        { note: "D5", duration: 800 },
-        { note: "E5", duration: 1600 },
-        { note: "D5", duration: 800 },
-        { note: "C5", duration: 800 },
-        { note: "A4", duration: 800 },
-        { note: "F4", duration: 1600 },
-        { note: "A4", duration: 800 },
-        { note: "C5", duration: 800 },
-        { note: "D5", duration: 800 },
-        { note: "E5", duration: 1600 },
-        { note: "D5", duration: 800 },
-        { note: "C5", duration: 800 },
-        { note: "A4", duration: 800 },
-        { note: "F4", duration: 1600 }
+        { note: "E4", duration: 400 },
+        { note: "G#4", duration: 400 },
+        { note: "A4", duration: 400 },
+        { note: "G#4", duration: 400 },
+        { note: "F#4", duration: 800 },
+        { note: "E4", duration: 400 },
+        { note: "D4", duration: 400 },
+        { note: "E4", duration: 400 },
+        { note: "F#4", duration: 800 },
+        { note: "E4", duration: 400 },
+        { note: "G#4", duration: 400 },
+        { note: "A4", duration: 400 },
+        { note: "B4", duration: 400 },
+        { note: "A4", duration: 400 },
+        { note: "G#4", duration: 400 },
+        { note: "F#4", duration: 800 },
+        { note: "E4", duration: 400 },
+        { note: "D4", duration: 400 },
+        { note: "E4", duration: 400 },
+        { note: "F#4", duration: 800 },
+        { note: "E4", duration: 400 },
+        { note: "G#4", duration: 400 },
+        { note: "A4", duration: 400 },
+        { note: "B4", duration: 400 },
+        { note: "A4", duration: 400 },
+        { note: "G#4", duration: 400 },
+        { note: "F#4", duration: 800 }
+        
     ];
 
     keys.forEach(key => {
         key.addEventListener("click", () => {
+            stopMusic(); // Stop any currently playing music
             const note = key.getAttribute("data-note");
             synth.triggerAttackRelease(note, "8n");
             animateKey(key);
@@ -108,8 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    demoBtn.addEventListener("click", () => playDemo(demoSequence));
-    tumHiHoBtn.addEventListener("click", () => playDemo(tumHiHoSequence));
+    demoBtn.addEventListener("click", () => playDemo(demoSequence, demoBtn));
+    tumHiHoBtn.addEventListener("click", () => playDemo(tumHiHoSequence, tumHiHoBtn));
 
     function animateKey(key) {
         key.classList.add("active");
@@ -123,15 +84,32 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function playDemo(sequence) {
-        sequence.forEach((item, index) => {
-            setTimeout(() => {
+    function playDemo(sequence, button) {
+        stopMusic(); // Stop any currently playing music
+        button.classList.add("highlight");
+        playing = true;
+        currentTimeouts = sequence.map((item, index) => {
+            return setTimeout(() => {
+                if (!playing) return;
                 const key = document.querySelector(`.key[data-note="${item.note}"]`);
                 synth.triggerAttackRelease(item.note, "8n");
                 animateKey(key);
                 createBubble();
             }, index * item.duration);
         });
+
+        const totalDuration = sequence.reduce((total, item) => total + item.duration, 0);
+        setTimeout(() => {
+            button.classList.remove("highlight");
+            playing = false;
+        }, totalDuration);
+    }
+
+    function stopMusic() {
+        playing = false; // Set playing flag to false
+        currentTimeouts.forEach(timeout => clearTimeout(timeout)); // Clear all timeouts
+        currentTimeouts = [];
+        songButtons.forEach(btn => btn.classList.remove("highlight")); // Remove highlight class from buttons
     }
 
     function createBubble() {
@@ -142,4 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
         bubbleContainer.appendChild(bubble);
         setTimeout(() => bubble.remove(), 3000);
     }
+
 });
+
